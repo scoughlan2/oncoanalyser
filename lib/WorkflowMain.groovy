@@ -276,24 +276,27 @@ class WorkflowMain {
         if (run_mode === Constants.RunMode.TARGETED) {
 
             if (!params.containsKey('panel')) {
-
-                def panels = Constants.PANELS_DEFINED.join('\n    - ')
-                log.error "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
-                    "  A panel is required to be set using the --panel CLI argument or in a \n" +
-                    "  configuration file.\n" +
-                    "  Currently, the available panels are:\n" +
-                    "    - ${panels}\n" +
-                    "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+                log.error "\n  A panel is required to be set using the --panel CLI argument or in configuration " +
+                    "file.\n  Currently, the available panels are:\n" +
+                    "    - ${Constants.PANELS_SUPPORTED.join('\n    - ')}"
                 System.exit(1)
 
-            } else if (!Constants.PANELS_DEFINED.contains(params.panel)) {
+            } else if (!Constants.PANELS_SUPPORTED.contains(params.panel)) {
+                if (params.containsKey('force_panel') && !params.force_panel) {
+                    log.error "\n  The ${params.panel} panel is not supported but you can force run the analysis using " +
+                        "this panel by setting --force_panel.\n  Currently, the supported panels are:\n" +
+                        "    - ${Constants.PANELS_SUPPORTED.join('\n    - ')}"
+                    System.exit(1)
+                } else {
+                    log.warn "got unsupported ${params.panel} panel but forcing to proceed"
+                }
 
-                def panels = Constants.PANELS_DEFINED.join('\n    - ')
-                log.error "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
-                    "  The ${params.panel} is not defined. Currently, the available panels are:\n" +
-                    "    - ${panels}\n" +
-                    "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-                System.exit(1)
+                if (!params.panel_data_paths.containsKey(params.panel)) {
+                    log.error "\n  The ${params.panel} panel is used but no filepaths were set in " +
+                        "params.panel_data_paths.\n  Currently, panels with defined filepaths are:\n" +
+                        "    - ${params.panel_data_paths.keySet().join('\n    - ')}"
+                    System.exit(1)
+                }
 
             }
 
@@ -315,6 +318,7 @@ class WorkflowMain {
         return [
             mode: run_mode,
             panel: run_mode === Constants.RunMode.TARGETED ? params.panel : null,
+            force_panel: params.containsKey('force_panel') ? params.force_panel : false,
             stages: stages,
             has_dna: inputs.any { Utils.hasTumorDna(it) },
             has_rna: inputs.any { Utils.hasTumorRna(it) },

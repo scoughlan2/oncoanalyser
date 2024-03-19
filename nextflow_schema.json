@@ -58,7 +58,12 @@
                 },
                 "force_genome": {
                     "type": "boolean",
-                    "description": "Skip check for restricted genome.",
+                    "description": "Force use of unsupported genome.",
+                    "fa_icon": "fas fa-palette"
+                },
+                "force_panel": {
+                    "type": "boolean",
+                    "description": "Force use of unsupported panel.",
                     "fa_icon": "fas fa-palette"
                 },
                 "processes_manual": {

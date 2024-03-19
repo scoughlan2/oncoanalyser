@@ -264,7 +264,7 @@ class Utils {
             }
 
             // Apply some required restrictions to targeted mode
-            if (run_config.mode === Constants.RunMode.TARGETED) {
+            if (run_config.mode === Constants.RunMode.TARGETED && !run_config.force_panel) {
 
                 // Do not allow normal DNA
                 if (Utils.hasNormalDna(meta)) {
@@ -278,13 +278,6 @@ class Utils {
                     log.error "targeted mode is not compatible with only tumor RNA provided for ${meta.group_id}\n\n" +
                         "The targeted workflow requires tumor DNA and can optionally take tumor RNA, depending on " +
                         "the configured panel."
-                    System.exit(1)
-                }
-
-                // Restrict tumor RNA inputs to the TSO500 panel
-                if (Utils.hasTumorRnaBam(meta) && run_config.panel != 'tso500') {
-                    def panel = run_config.panel.toUpperCase()
-                        "Only the TSO500 panel supports tumor RNA analysis"
                     System.exit(1)
                 }
 
