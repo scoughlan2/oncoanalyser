@@ -146,7 +146,7 @@ workflow WGTS {
             ref_data.genome_bwa_index_bseq,
             ref_data.genome_bwa_index_biidx,
             params.max_fastq_records,
-            , // disabled for now
+            0, // disabled for now
         )
 
         READ_ALIGNMENT_RNA(
