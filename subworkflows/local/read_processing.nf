@@ -16,6 +16,7 @@ workflow READ_PROCESSING {
 
         // Params
         has_umis      // boolean: [mandatory] UMI processing flag
+        umi_duplex_delim // string: [mandatory] UMI duplex delimiter
 
     main:
         // Channel for version.yml files
@@ -83,6 +84,7 @@ workflow READ_PROCESSING {
             genome_dict,
             unmap_regions,
             has_umis,
+            umi_duplex_delim,
         )
 
         // Sort into a tumor and normal channel

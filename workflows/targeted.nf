@@ -141,6 +141,7 @@ workflow TARGETED {
             ref_data.genome_bwa_index_bseq,
             ref_data.genome_bwa_index_biidx,
             params.max_fastq_records,
+            params.umi_length
         )
 
         READ_ALIGNMENT_RNA(
@@ -186,6 +187,7 @@ workflow TARGETED {
             ref_data.genome_dict,
             hmf_data.unmap_regions,
             has_umis,
+            params.umi_duplex_delim,
         )
 
         ch_versions = ch_versions.mix(READ_PROCESSING.out.versions)

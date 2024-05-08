@@ -152,7 +152,6 @@ class WorkflowMain {
                     params.ref_data_panel_data_path = Constants.TSO500_PANEL_38_PATH
                 }
             }
-
         }
 
         def stages = Processes.getRunStages(
@@ -288,17 +287,16 @@ class WorkflowMain {
 
             } else if (!Constants.PANELS_DEFINED.contains(params.panel)) {
 
-                def panels = Constants.PANELS_DEFINED.join('\n    - ')
-                log.error "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
-                    "  The ${params.panel} is not defined. Currently, the available panels are:\n" +
-                    "    - ${panels}\n" +
-                    "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-                System.exit(1)
-
+                if (!params.containsKey('force_panel') || !params.force_panel) {
+                    def panels = Constants.PANELS_DEFINED.join('\n    - ')
+                    log.error "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+                        "  The ${params.panel} is not defined. Currently, the available panels are:\n" +
+                        "    - ${panels}\n" +
+                        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+                    System.exit(1)
+                }
             }
-
         }
-
     }
 
     public static getRunConfig(params, inputs, log) {

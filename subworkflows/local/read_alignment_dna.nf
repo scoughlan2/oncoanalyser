@@ -21,6 +21,7 @@ workflow READ_ALIGNMENT_DNA {
 
         // Params
         max_fastq_records      // numeric: [mandatory] max number of FASTQ records per split
+        umi_length             // numeric: [optional] UMI length for extraction from fastq
 
     main:
         // Channel for version.yml files
@@ -75,12 +76,13 @@ workflow READ_ALIGNMENT_DNA {
         // Split FASTQ into chunks if requested for distributed processing
         // channel: [ meta_fastq_ready, fastq_fwd, fastq_fwd ]
         ch_fastqs_ready = Channel.empty()
-        if (max_fastq_records > 0) {
+        if (max_fastq_records > 0 || umi_length > 0) {
 
             // Run process
             FASTP(
                 ch_fastq_inputs,
                 max_fastq_records,
+                umi_length,
             )
 
             ch_versions = ch_versions.mix(FASTP.out.versions)
