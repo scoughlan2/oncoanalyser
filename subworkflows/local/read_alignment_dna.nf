@@ -87,7 +87,11 @@ workflow READ_ALIGNMENT_DNA {
 
             ch_versions = ch_versions.mix(FASTP.out.versions)
 
-            // Prepare outputs within conditional block
+        }
+
+        // Now prepare according to FASTQs splitting
+        if (max_fastq_records > 0) {
+
             ch_fastqs_ready = FASTP.out.fastq
               .flatMap { meta_fastq, reads_fwd, reads_rev ->
 
@@ -115,7 +119,10 @@ workflow READ_ALIGNMENT_DNA {
 
         } else {
 
-            ch_fastqs_ready = ch_fastq_inputs
+            // Select appropriate source
+            ch_fastq_source = umi_length > 0 ? FASTP.out.fastq : ch_fastq_inputs
+
+            ch_fastqs_ready = ch_fastq_source
                 .map { meta_fastq, fastq_fwd, fastq_rev ->
 
                     def meta_fastq_ready = [
