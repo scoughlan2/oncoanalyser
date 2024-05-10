@@ -152,6 +152,7 @@ class WorkflowMain {
                     params.ref_data_panel_data_path = Constants.TSO500_PANEL_38_PATH
                 }
             }
+
         }
 
         def stages = Processes.getRunStages(
@@ -296,7 +297,9 @@ class WorkflowMain {
                     System.exit(1)
                 }
             }
+
         }
+
     }
 
     public static getRunConfig(params, inputs, log) {
