@@ -2,9 +2,7 @@ process MARKDUPS {
     tag "${meta.id}"
     label 'process_medium'
 
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/hmftools-mark-dups:1.1.5--hdfd78af_0' :
-        'quay.io/biocontainers/hmftools-mark-dups:1.1.5--hdfd78af_0' }"
+    container 'docker.io/scwatts/hmftools-mark-dups:1.1.6_beta'
 
     input:
     tuple val(meta), path(bams), path(bais)
@@ -27,8 +25,7 @@ process MARKDUPS {
     def umi_flags = has_umis ? '-umi_enabled -umi_duplex -umi_duplex_delim +' : ''
 
     """
-    markdups \\
-        -Xmx${Math.round(task.memory.bytes * 0.95)} \\
+    java -Xmx${Math.round(task.memory.bytes * 0.95)} -jar /opt/markdups/markdups.jar \\
         \\
         -samtools \$(which samtools) \\
         -sambamba \$(which sambamba) \\
