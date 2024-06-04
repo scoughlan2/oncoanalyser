@@ -11,8 +11,8 @@ workflow READ_PROCESSING {
     take:
     // Sample data
     ch_inputs     // channel: [mandatory] [ meta ]
-    ch_dna_tumor  // channel: [mandatory] [ meta, [bam, ...], [bai, ...] ]
-    ch_dna_normal // channel: [mandatory] [ meta, [bam, ...], [bai, ...] ]
+    ch_tumor_bam  // channel: [mandatory] [ meta, [bam, ...], [bai, ...] ]
+    ch_normal_bam // channel: [mandatory] [ meta, [bam, ...], [bai, ...] ]
 
     // Reference data
     genome_fasta  // channel: [mandatory] /path/to/genome_fasta
@@ -32,7 +32,7 @@ workflow READ_PROCESSING {
     // Select and sort input sources, separating bytumor and normal
     // channel: runnable: [ meta, [bam, ...], [bai, ...] ]
     // channel: skip: [ meta ]
-    ch_inputs_tumor_sorted = ch_dna_tumor
+    ch_inputs_tumor_sorted = ch_tumor_bam
         .map { meta, bams, bais ->
             return [
                 meta,
@@ -47,7 +47,7 @@ workflow READ_PROCESSING {
                 return meta
         }
 
-    ch_inputs_normal_sorted = ch_dna_normal
+    ch_inputs_normal_sorted = ch_normal_bam
         .map { meta, bams, bais ->
             return [
                 meta,

@@ -465,12 +465,10 @@ workflow TARGETED {
     ch_sage_germline_append_out = Channel.empty()
     if (run_config.stages.orange) {
 
-        // NOTE(SW): currently used only for ORANGE but will also be used for Neo once implemented
-
         SAGE_APPEND(
             ch_inputs,
-            ch_align_rna_tumor_out,
             ch_purple_out,
+            ch_align_rna_tumor_out,
             ref_data.genome_fasta,
             ref_data.genome_version,
             ref_data.genome_fai,

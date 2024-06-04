@@ -1,3 +1,6 @@
+// TODO(SW): support longitudinal samples (requires primary and subsequent samples [proposing: InfoField.LONGITUDINAL_PRIMARY])
+
+
 //
 // This file holds several Groovy functions that could be useful for any Nextflow pipeline
 //
