@@ -53,7 +53,7 @@ process MARKDUPS {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        markdups: \$(markdups -version | awk '{ print \$NF }')
+        markdups: \$(markdups -version | sed -n '/^MarkDups version / { s/^.* //p }')
         sambamba: \$(sambamba --version 2>&1 | egrep '^sambamba' | head -n 1 | awk '{ print \$NF }')
         samtools: \$(samtools --version 2>&1 | egrep '^samtools\\s' | head -n 1 | sed 's/^.* //')
     END_VERSIONS

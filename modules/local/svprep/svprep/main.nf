@@ -54,7 +54,7 @@ process SVPREP {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        svprep: \$(svprep -version | sed 's/^.* //')
+        svprep: \$(svprep -version | sed -n '/^SvPrep version/ { s/^.* //p }')
     END_VERSIONS
     """
 

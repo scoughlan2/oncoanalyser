@@ -64,7 +64,7 @@ process CUPPA {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        cuppa: \$(cuppa | sed -n '1s/^.* //p')
+        cuppa: \$(cuppa | sed -n '/ Cuppa version:/ { s/^.* //p }')
     END_VERSIONS
     """
 

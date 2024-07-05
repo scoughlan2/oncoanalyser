@@ -52,7 +52,7 @@ process GRIPSS_SOMATIC {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        gripss: \$(gripss -version | sed 's/^.* //')
+        gripss: \$(gripss -version | sed -n '/^Gripss version / { s/^.* //p }')
     END_VERSIONS
     """
 

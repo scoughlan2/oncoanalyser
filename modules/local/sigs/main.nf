@@ -34,7 +34,7 @@ process SIGS {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        sigs: \$(sigs -version | sed 's/^.* //')
+        sigs: \$(sigs -version | sed -n '/^Sigs version / { s/^.* //p }')
     END_VERSIONS
     """
 

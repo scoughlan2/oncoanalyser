@@ -46,8 +46,8 @@ process GRIDSS_PREPROCESS {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        gridss: \$(CallVariants --version 2>&1 | sed 's/-gridss\$//')
-        svprep: \$(svprep -version | sed 's/^.* //')
+        gridss: \$(CallVariants --version 2>&1 | sed -n '/-gridss\$/ { s/-gridss//p }')
+        svprep: \$(svprep -version | sed -n '/^SvPrep version/ { s/^.* //p }')
     END_VERSIONS
     """
 
