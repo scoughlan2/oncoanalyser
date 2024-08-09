@@ -2,10 +2,14 @@ process ORANGE {
     tag "${meta.id}"
     label 'process_single'
 
-    conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/hmftools-orange:2.7.1--hdfd78af_0' :
-        'biocontainers/hmftools-orange:2.7.1--hdfd78af_0' }"
+    // conda "${moduleDir}/environment.yml"
+    // container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+    //     'https://depot.galaxyproject.org/singularity/hmftools-orange:2.7.1--hdfd78af_0' :
+    //     'biocontainers/hmftools-orange:2.7.1--hdfd78af_0' }"
+
+    // NOTE: After bash is added to the hartwig docker images we would use docker.io/hartwigmedicalfoundation/orange:3.7.0-beta.21 as the container.
+    container 'docker.io/library/orange-local'
+    containerOptions '--entrypoint='
 
     input:
     tuple val(meta), path(bam_metrics_somatic), path(bam_metrics_germline), path(flagstat_somatic), path(flagstat_germline), path(sage_somatic_dir), path(sage_germline_dir), path(smlv_somatic_vcf), path(smlv_germline_vcf), path(purple_dir), path(linx_somatic_anno_dir), path(linx_somatic_plot_dir), path(linx_germline_anno_dir), path(virusinterpreter_dir), path(chord_dir), path(sigs_dir), path(lilac_dir), path(cuppa_dir), path(isofox_dir)
@@ -98,9 +102,7 @@ process ORANGE {
     mkdir -p output/
 
     # NOTE(SW): manually locating ORANGE install directory so that we can applu `--add-opens`, won't fix old bioconda recipe
-    orange_bin_fp=\$(which orange)
-    orange_install_dir=\$(readlink \${orange_bin_fp} | xargs dirname)
-    orange_jar=\$(dirname \${orange_bin_fp})/\${orange_install_dir}/orange.jar
+    orange_jar=/usr/share/hartwig/orange.jar
 
     java \\
         --add-opens java.base/java.time=ALL-UNNAMED \\
@@ -149,7 +151,7 @@ process ORANGE {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        orange: \$(orange -version | sed 's/^.* //')
+        orange: \$(java -jar \${orange_jar} -version | sed 's/^.* //')
     END_VERSIONS
     """
 
@@ -161,4 +163,6 @@ process ORANGE {
 
     echo -e '${task.process}:\\n  stub: noversions\\n' > versions.yml
     """
+
+
 }
